@@ -1,7 +1,10 @@
 # File name: tictactoe.py
 # Contains tic tac toe game's code in python
 # There will be two players in a game. Two signs X and O represent each player. 
-# This program supports variable sized TicTacToe board, eg 3x3 / 5x5 / 7x7 / 100x100 board size
+# This program supports variable sized TicTacToe board, e.g. 3x3 / 5x5 / 7x7 / 100x100 board size
+# It works for board sizes 3x3 to 4x4 as upper_size = 4 is set.
+# Just change the value of upper_size = 7 to work for board sizes 3x3 to 7x7 etc.
+# The game is automatically played by the program and hence no user input is needed
 
 import random
 from enum import IntEnum
@@ -9,6 +12,9 @@ from enum import IntEnum
 class TicTacToe:
 # Initialize TicTacToe board as an empty list
     board = []
+# It works for board sizes 3x3 to 4x4 as upper_size = 4 is set
+# Just change the value of upper_size = 7 to work for board sizes from 3x3 to 7x7 etc.
+    upper_size = 4
 
 # Different states
     class STATES(IntEnum):
@@ -26,24 +32,9 @@ class TicTacToe:
         self.board[row][column] = symbol
 
 
-# Get size of TicTacToe board from user
-    def get_board_size(self):
-        size = -1
-
-        # taking size of borad as user input
-        # This block makes sure user enters correct board size only
-        while True:
-            user_input = input("Enter size of TicTacToe board: ")
-            try:
-                size = int(user_input)
-                if size > 2:
-                    break
-                else:
-                    print("The size must be an integer number greater than 2")
-            except ValueError:
-                print("The size must be an integer number greater than 2")
-
-        return size
+# Get size of TicTacToe board randomly
+    def get_board_size_randomly(self):
+        return random.randint(3, self.upper_size)
 
 
 # Create a variable sized TicTacToe board using a 2-dimensional list and initialize each cell as empty using '-'
@@ -132,11 +123,22 @@ class TicTacToe:
             print()
 
 
+# Check for empty places on board
+    def empty_places(self, board):
+        empty_spots = []
+
+        for row in range(len(board)):
+            for item in range(len(board)):
+                if board[row][item] == '-':
+                    empty_spots.append((row, item))
+        return empty_spots
+
+
 # Start the game
     def start(self):
 
 # Get the board size from user
-        size = self.get_board_size()
+        size = self.get_board_size_randomly()
 
 # creates an empty board
         board = TicTacToe.board = self.create_board(size)
@@ -153,26 +155,18 @@ class TicTacToe:
 
 # Show the board to the player to select the spot for the next move
             self.show_board()
+            print()  
 
-            # Ask the player to enter the row and column number
-            # This block makes sure user only enters correct row and column numbers
-            while True:
-                try:
-                    row, col = list(map(int, input("Enter row and column numbers to position player's marker: ").split()))
-                    if row > 0 and row <= size and col > 0 and col <= size:
-                        if board[row - 1][col - 1] == '-':
-                            break
-                        else:
-                            print("This slot is already occupied. Try an empty spot.")
-                    else:
-                        print(f"The row and column numbers must be integer number from 1 to {size}")
-                except ValueError:
-                    print(f"The row and column numbers must be integer number from 1 to {size}")
-
-            print()
-
+# Check for empty places on board
+            selection = self.empty_places(board)
+            
+# Select a random place for the player
+            current_loc = random.choice(selection)
+            row = current_loc[0]
+            col = current_loc[1]
+            
             # Update the spot with the respective player sign
-            self.place_marker(player, row - 1, col - 1)
+            self.place_marker(player, row, col)
 
             # checking whether current player has won or not. If won, change the status and break infinite loop
             if self.does_player_win(player, board):
