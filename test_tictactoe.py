@@ -11,9 +11,6 @@ class TestTicTacToe(unittest.TestCase):
         self.assertEqual(TicTacToe.create_board(self, 4), [['-', '-', '-', '-'], ['-', '-', '-', '-'], ['-', '-', '-', '-'], ['-', '-', '-', '-']])
         self.assertEqual(TicTacToe.create_board(self, 3), [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']])
 
-# checks whether creating first player randomly or not
-    def test_get_first_player_randomly(self):
-        self.assertEqual(TicTacToe.get_first_player_randomly(self), 0 or 1)
 
 # checks whether determining row-wise win or not
     def test_row_wise_win(self):
@@ -44,4 +41,10 @@ class TestTicTacToe(unittest.TestCase):
     def test_player_swap(self):
         self.assertEqual(TicTacToe.swap_player_turn(self,'X'), 'O')
         self.assertEqual(TicTacToe.swap_player_turn(self,'O'), 'X')
- 
+
+
+# checks for empty places on TicTacToe board
+    def test_empty_places(self):
+        self.assertEqual(TicTacToe.empty_places(self, [['O', 'O', 'X'], ['X', 'X', 'O'], ['O', 'X', 'O']]), [])
+        self.assertEqual(TicTacToe.empty_places(self, [['O', '-', 'X'], ['X', 'X', 'O'], ['O', 'X', 'O']]), [(0,1)])
+        self.assertEqual(TicTacToe.empty_places(self, [['O', '-', 'X'], ['-', 'X', 'O'], ['O', 'X', '-']]), [(0,1),(1,0),(2,2)])
