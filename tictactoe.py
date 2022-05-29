@@ -15,7 +15,7 @@ class TicTacToe:
     board = []
 # It works for board sizes 3x3 to 4x4 as upper_size = 4 is set
 # Just change the value of upper_size = 7 to work for board sizes from 3x3 to 7x7 etc.
-    upper_size = 3
+    upper_size = 4
 
 # Different states
     class STATES(IntEnum):
